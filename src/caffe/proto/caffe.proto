@@ -421,6 +421,7 @@ message LayerParameter {
   optional ThresholdParameter threshold_param = 128;
   optional TileParameter tile_param = 138;
   optional WindowDataParameter window_data_param = 129;
+  optional QFunctionParameter qfunction_param = 200;
 }
 
 // Message that stores parameters used to apply transformation
@@ -801,6 +802,12 @@ message HingeLossParameter {
   }
   // Specify the Norm to use L1 or L2
   optional Norm norm = 1 [default = L1];
+}
+
+message QFunctionParameter {
+	optional float margin = 1 [default = 1.0];
+	optional int32 age_margin = 2 [default = 5];
+	optional float curvature = 3 [default = 1.0];
 }
 
 message ImageDataParameter {
