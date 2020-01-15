@@ -8,13 +8,13 @@ template <typename Dtype>
 void GeneratorLossLayer<Dtype>::LayerSetUp(const vector<Blob<Dtype> *> &bottom,
                                            const vector<Blob<Dtype> *> &top) {
   LossLayer<Dtype>::LayerSetUp(bottom, top);
-  CHECK_EQ(bottom[0]->height(), 1);
-  CHECK_EQ(bottom[0]->width(), 1);
-  CHECK_EQ(bottom[1]->height(), 1);
-  CHECK_EQ(bottom[1]->width(), 1);
-  CHECK_EQ(bottom[0]->channels(), bottom[1]->channels());
+  // CHECK_EQ(bottom[0]->height(), 1);
+  // CHECK_EQ(bottom[0]->width(), 1);
+  // CHECK_EQ(bottom[2]->height(), 1);
+  // CHECK_EQ(bottom[2]->width(), 1);
+  // CHECK_EQ(bottom[0]->channels(), bottom[1]->channels());
 
-  helper_.Reshape(1, bottom[1]->channels(), 1, 1);
+  helper_.Reshape(1, bottom[2]->channels(), 1, 1);
 
   qFunc_.setup(this->layer_param_);
 }
@@ -23,15 +23,15 @@ template <typename Dtype>
 void GeneratorLossLayer<Dtype>::Forward_cpu(const vector<Blob<Dtype> *> &bottom,
                                             const vector<Blob<Dtype> *> &top) {
   // bottom[0] original
-  // bottom[1] generate
-  // bottom[2] label
+  // bottom[1] label
+  // bottom[2] generate
 
   int N = bottom[0]->num(); // get the batch size
   int S = bottom[0]->height() * bottom[0]->width() *
           bottom[0]->channels(); // get each blob child size
   const Dtype *origin = bottom[0]->cpu_data();
-  const Dtype *generate = bottom[1]->cpu_data();
-  const Dtype *label = bottom[2]->cpu_data();
+  const Dtype *generate = bottom[2]->cpu_data();
+  const Dtype *label = bottom[1]->cpu_data();
   Dtype *bout = bottom[1]->mutable_cpu_diff();
   Dtype tmp(0.0), this_loss(0.0);
   Dtype loss(0.0);
@@ -96,7 +96,7 @@ void GeneratorLossLayer<Dtype>::Backward_cpu(
     const vector<Blob<Dtype> *> &top, const vector<bool> &propagate_down,
     const vector<Blob<Dtype> *> &bottom) {
 
-  if (propagate_down[1]) {
+  if (propagate_down[2]) { // generate
       const Dtype alpha = 2 * top[0]->cpu_diff()[0];
       const int N = bottom[1]->num();
       const int S = bottom[1]->channels() * bottom[1]->width() * bottom[1]->height();
