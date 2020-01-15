@@ -20,7 +20,7 @@ void QuadExpandLayer<Dtype>::Reshape(const vector<Blob<Dtype> *> &bottom,
                   bottom[0]->height(), bottom[0]->width());
 
   // check
-  CHECK_EQ(bottom[0]->num(), top[0]->num());
+  CHECK_EQ(bottom[0]->num() / 2, top[0]->num());
   CHECK_EQ(bottom[0]->channels() * 3, top[0]->channels());
   CHECK_EQ(bottom[0]->width(), top[0]->width());
   CHECK_EQ(bottom[0]->height(), top[0]->height());
