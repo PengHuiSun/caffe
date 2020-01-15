@@ -1,5 +1,5 @@
-#ifndef CAFFE_LAYER_SUN_PENG_HUI_LOSS_LAYER_HPP__
-#define CAFFE_LAYER_SUN_PENG_HUI_LOSS_LAYER_HPP__
+#ifndef CAFFE_LAYER_QUADRUPLET_LOSS_LAYER_HPP__
+#define CAFFE_LAYER_QUADRUPLET_LOSS_LAYER_HPP__
 
 #include "caffe/blob.hpp"
 #include "caffe/layer.hpp"
@@ -48,9 +48,9 @@ template <typename Dtype> struct QFunction {
   };
 };
 
-template <typename Dtype> class SunPengHuiLossLayer : public LossLayer<Dtype> {
+template <typename Dtype> class QuadrupletLossLayer : public LossLayer<Dtype> {
 public:
-  explicit SunPengHuiLossLayer(const LayerParameter &param)
+  explicit QuadrupletLossLayer(const LayerParameter &param)
       : LossLayer<Dtype>(param) {}
 
   virtual void LayerSetUp(const vector<Blob<Dtype> *> &bottom,
@@ -77,4 +77,4 @@ protected:
 
 } // namespace caffe
 
-#endif // CAFFE_LAYER_SUN_PENG_HUI_LOSS_LAYER_HPP__
+#endif // CAFFE_LAYER_QUADRUPLET_LOSS_LAYER_HPP__
