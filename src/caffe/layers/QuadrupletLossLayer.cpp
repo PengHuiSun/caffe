@@ -62,7 +62,7 @@ void QuadrupletLossLayer<Dtype>::Forward_cpu(
     // compute: q of A N1
     q = qFunc_.call(label[i + 0], label[i + 2]);
     // compute: loss of A N1
-    loss_a_n1 = margin - caffe_cpu_dot(S, diff_A_N1, diff_A_N1) * q;
+    loss_a_n1 = margin() - caffe_cpu_dot(S, diff_A_N1, diff_A_N1) * q;
 
     // for backward
     if (loss_a_n1 == 0) {
@@ -72,9 +72,9 @@ void QuadrupletLossLayer<Dtype>::Forward_cpu(
     }
 
     // compute: q of P N2
-    q = qFunc_.call(label[i + 1], lable[i + 4]);
+    q = qFunc_.call(label[i + 1], label[i + 3]);
     // compute: loss of P N2
-    loss_p_n2 = margin - caffe_cpu_dot(S, diff_P_N2, diff_P_N2) * q;
+    loss_p_n2 = margin() - caffe_cpu_dot(S, diff_P_N2, diff_P_N2) * q;
 
     // for backward
     if (loss_a_n1 == 0) {
@@ -93,7 +93,7 @@ void QuadrupletLossLayer<Dtype>::Forward_cpu(
       caffe_cpu_scale(S, q, diff_A_P, diff_A_P);
     }
 
-    loss += loss_a_n1 + loss_p_n2 + loss_a_p
+    loss += loss_a_n1 + loss_p_n2 + loss_a_p;
   }
 
   loss = loss / N;
@@ -116,9 +116,9 @@ void QuadrupletLossLayer<Dtype>::Backward_cpu(
       Dtype *_P = &b_data[(i + 1) * S];
       Dtype *_N1 = &b_data[(i + 2) * S];
       Dtype *_N2 = &b_data[(i + 3) * S];
-      const Dtype *diff_A_N1 = diff[(i + 0) * S];
-      const Dtype *diff_P_N2 = diff[(i + 1) * S];
-      const Dtype *diff_A_P = diff[(i + 2) * S];
+      const Dtype *diff_A_N1 = &diff[(i + 0) * S];
+      const Dtype *diff_P_N2 = &diff[(i + 1) * S];
+      const Dtype *diff_A_P = &diff[(i + 2) * S];
 
       Dtype alpha = 2 * top[0]->cpu_diff()[0];
 

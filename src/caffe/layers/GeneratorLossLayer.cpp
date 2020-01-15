@@ -37,7 +37,7 @@ void GeneratorLossLayer<Dtype>::Forward_cpu(const vector<Blob<Dtype> *> &bottom,
   Dtype loss(0.0);
   num_constraints = 0.0;
 
-  Dtype margin = qFunc.margin_;
+  Dtype margin = qFunc_.margin_;
 
   for (int i = 0, j = 0; i < N; i += 4, j += 2) {
     const Dtype *A = &origin[(i + 0) * S];
