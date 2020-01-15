@@ -33,7 +33,7 @@ void GeneratorLossLayer<Dtype>::Forward_cpu(const vector<Blob<Dtype> *> &bottom,
   const Dtype *origin = bottom[0]->cpu_data();
   const Dtype *generate = bottom[2]->cpu_data();
   const Dtype *label = bottom[1]->cpu_data();
-  Dtype *diff = diff_->mutable_cpu_data();
+  Dtype *diff = diff_.mutable_cpu_data();
   Dtype tmp(0.0), this_loss(0.0);
   Dtype loss(0.0);
   num_constraints = 0.0;
@@ -101,7 +101,7 @@ void GeneratorLossLayer<Dtype>::Backward_cpu(
       const Dtype alpha = 2 * top[0]->cpu_diff()[0];
       const int N = bottom[2]->num();
       const int S = bottom[2]->channels() * bottom[2]->width() * bottom[2]->height();
-      caffe_cpu_scale(N * S, alpha, diff_->cpu_data(), bottom[2]->mutable_cpu_diff());
+      caffe_cpu_scale(N * S, alpha, diff_.cpu_data(), bottom[2]->mutable_cpu_diff());
   }
 }
 
