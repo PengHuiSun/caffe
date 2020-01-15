@@ -61,7 +61,7 @@ void GeneratorLossLayer<Dtype>::Forward_cpu(const vector<Blob<Dtype> *> &bottom,
 
     caffe_sub(S, A, N11, helper_.mutable_cpu_data());
     tmp = caffe_cpu_dot(S, helper_.cpu_data(), helper_.cpu_data());
-    tmp = tmp * (1 - qFunc.call(label[i + 0], label[i + 2])) - margin);
+    tmp = tmp * (1 - qFunc.call(label[i + 0], label[i + 2])) - margin;
     tmp = std::max(Dtype(0), tmp);
     if (tmp != 0) {
       caffe_add(S, diff_N11, helper_.cpu_data(), diff_N11);
@@ -81,7 +81,7 @@ void GeneratorLossLayer<Dtype>::Forward_cpu(const vector<Blob<Dtype> *> &bottom,
 
     caffe_sub(S, P, N22, helper_.mutable_cpu_data());
     tmp = caffe_cpu_dot(S, helper_.cpu_data(), helper_.cpu_data());
-    tmp = tmp * (1 - qFunc.call(label[i + 1], label[i + 3])) - margin);
+    tmp = tmp * (1 - qFunc.call(label[i + 1], label[i + 3])) - margin;
     tmp = std::max(Dtype(0), tmp);
     if (tmp != 0) {
       caffe_add(S, diff_N22, helper_.cpu_data(), diff_N22);
@@ -97,7 +97,7 @@ void GeneratorLossLayer<Dtype>::Backward_cpu(
     const vector<Blob<Dtype> *> &bottom) {
 
   if (propagate_down[1]) {
-      const Dtype alph = 2 * top[0]->cpu_diff()[0];
+      const Dtype alpha = 2 * top[0]->cpu_diff()[0];
       const int N = bottom[1]->num();
       const int S = bottom[1]->channels() * bottom[1]->width() * bottom[1]->height();
       caffe_cpu_scale(N * S, alpha, bottom[1]->cpu_diff(), bottom[1]->mutable_cpu_diff());

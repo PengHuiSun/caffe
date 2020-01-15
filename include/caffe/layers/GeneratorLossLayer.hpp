@@ -35,7 +35,7 @@ protected:
                             const vector<bool> &propagate_down,
                             const vector<Blob<Dtype> *> &bottom);
 
-  QFunction<Dtype> qFunc;
+  QFunction<Dtype> qFunc_;
   Blob<Dtype> helper_; // to help caculations
   Dtype num_constraints;
 };
