@@ -37,6 +37,7 @@ protected:
 
   QFunction<Dtype> qFunc_;
   Blob<Dtype> helper_; // to help caculations
+  Blob<Dtype> diff_;
   Dtype num_constraints;
 };
 

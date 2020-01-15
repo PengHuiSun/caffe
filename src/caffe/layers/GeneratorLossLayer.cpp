@@ -15,6 +15,7 @@ void GeneratorLossLayer<Dtype>::LayerSetUp(const vector<Blob<Dtype> *> &bottom,
   // CHECK_EQ(bottom[0]->channels(), bottom[1]->channels());
 
   helper_.Reshape(1, bottom[2]->channels(), 1, 1);
+  diff_.ReshapeLike(*bottom[2]);
 
   qFunc_.setup(this->layer_param_);
 }
@@ -32,7 +33,7 @@ void GeneratorLossLayer<Dtype>::Forward_cpu(const vector<Blob<Dtype> *> &bottom,
   const Dtype *origin = bottom[0]->cpu_data();
   const Dtype *generate = bottom[2]->cpu_data();
   const Dtype *label = bottom[1]->cpu_data();
-  Dtype *bout = bottom[1]->mutable_cpu_diff();
+  Dtype *diff = diff_->mutable_cpu_data();
   Dtype tmp(0.0), this_loss(0.0);
   Dtype loss(0.0);
   num_constraints = 0.0;
@@ -47,8 +48,8 @@ void GeneratorLossLayer<Dtype>::Forward_cpu(const vector<Blob<Dtype> *> &bottom,
     const Dtype *N11 = &generate[(j + 0) * S];
     const Dtype *N22 = &generate[(j + 1) * S];
 
-    Dtype *diff_N11 = &bout[(j + 0) * S];
-    Dtype *diff_N22 = &bout[(j + 1) * S];
+    Dtype *diff_N11 = &diff[(j + 0) * S];
+    Dtype *diff_N22 = &diff[(j + 1) * S];
 
     // for negative 1
     caffe_sub(S, N11, A, helper_.mutable_cpu_data());
@@ -98,9 +99,9 @@ void GeneratorLossLayer<Dtype>::Backward_cpu(
 
   if (propagate_down[2]) { // generate
       const Dtype alpha = 2 * top[0]->cpu_diff()[0];
-      const int N = bottom[1]->num();
-      const int S = bottom[1]->channels() * bottom[1]->width() * bottom[1]->height();
-      caffe_cpu_scale(N * S, alpha, bottom[1]->cpu_diff(), bottom[1]->mutable_cpu_diff());
+      const int N = bottom[2]->num();
+      const int S = bottom[2]->channels() * bottom[2]->width() * bottom[2]->height();
+      caffe_cpu_scale(N * S, alpha, diff_->cpu_data(), bottom[2]->mutable_cpu_diff());
   }
 }
 
